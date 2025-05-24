@@ -1,0 +1,105 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem;
+    text-align: center;
+}
+
+main {
+    padding: 1rem;
+}
+
+/* Form styles */
+form {
+    margin: 1rem auto;
+    padding: 1rem;
+    background: #fff;
+    border-radius: 5px;
+    max-width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.50);
+}
+
+form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+form input, form select, form button {
+    width: 100%;
+    height: 1.75rem;
+    padding: 0rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+form button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+form button:hover {
+    background-color: #555;
+}
+
+/* List styles */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul li {
+    background: #fff;
+    margin: 0.5rem 0;
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Hidden sections */
+.hidden {
+    display: none;
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+    main {
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-start;
+        gap: 2rem;
+    }
+
+    section {
+        flex: 1;
+        max-width: 500px;
+    }
+}
+
+@media (min-width: 1024px) {
+    header {
+        font-size: 1.5rem;
+    }
+
+    form {
+        max-width: 500px;
+    }
+
+    ul li {
+        font-size: 1.1rem;
+    }
+}
