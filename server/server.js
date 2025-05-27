@@ -5,10 +5,14 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/auth');
 const placesRoutes = require('./routes/places');
+const cors = require('cors'); // Set restriction of making app public!
+
 
 dotenv.config();
 
 const app = express();
+
+app.use(cors());
 
 // Middleware
 app.use(express.json());
