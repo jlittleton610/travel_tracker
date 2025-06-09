@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-
+const API_BASE = 'http://localhost:5000'
 
 if (loginForm) { // Check if login for exists on page
     loginForm.addEventListener('submit', async (e) => {
@@ -57,7 +57,7 @@ if (loginForm) { // Check if login for exists on page
 
         try {
             // Send POST request to backend
-            const response = await fetch('/api/auth/login', {
+            const response = await fetch(`${API_BASE}/api/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json'},
                 body: JSON.stringify({ email, password }) // Convert data to json
@@ -66,6 +66,9 @@ if (loginForm) { // Check if login for exists on page
 
             if (response.ok) { // If response is 200 (success)
                 alert(data.msg);
+
+                // Store user info in localStorage for later use
+                localStorage.setItem('userId', data.user._id); // Save user's MongoDB ID
                 showSection(dashboardSection); // Show dashboard section
             } else {
                 alert(data.msg || 'Login failed');
@@ -77,7 +80,7 @@ if (loginForm) { // Check if login for exists on page
     });
 }
 
-const API_BASE = 'http://localhost:5000'
+
 
 if (registerForm) { // Check if registration form exists on page
     registerForm.addEventListener('submit', async (e) => {
@@ -110,29 +113,63 @@ if (registerForm) { // Check if registration form exists on page
 
     // Event listener for the places form
     if (placesForm) {
-        placesForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const placeName = document.getElementById('place-name').value;
-            const category = document.getElementById('category').value;
-            const address = document.getElementById('address').value;
+    placesForm.addEventListener('submit', async (e) => {
+        e.preventDefault(); // Prevent default form submit
 
-            // Create a new list item
-            const listItem = document.createElement('li');
-            listItem.textContent = `${placeName} (${category}) - ${address}`;
+        const placeName = document.getElementById('place-name').value;
+        const category = document.getElementById('category').value;
+        const address = document.getElementById('address').value;
+        const userId = localStorage.getItem('userId'); // Get the logged-in user's ID
 
-            // Append the new place to the list
-            placesList.appendChild(listItem);
+        if (!userId) {
+            alert('User not logged in!');
+            return;
+        }
 
-            // Clear the form
-            placesForm.reset();
-        });
-    }
+        try {
+            // Send POST request to backend to add a new place
+            const response = await fetch(`${API_BASE}/api/places`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user: userId, name: placeName, category, address })
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+                alert('Place added!');
+                loadPlaces(); // Refresh the list after adding
+            } else {
+                alert(data.msg || 'Failed to add place');
+            }
+        } catch (err) {
+            alert('Error connecting to server');
+        }
+
+        placesForm.reset(); // Clear the form
+    });
+}
 
     // Function to load user's places
-    function loadPlaces() {
-        // Add logic to fetch and display places
-        // Example: Populate the places list with dummy data or data from the backend
+    async function loadPlaces() {
+        const userId = localStorage.getItem('userId');
+        if (!userId) return;
+
+        try {
+            const response = await fetch(`${API_BASE}/api/places/${userId}`);
+            const places = await response.json();
+
+            // Clear current list
+            placesList.innerHTML = '';
+
+            // Add each place to the list
+            places.forEach(place => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${place.name} (${place.category}) - ${place.address}`;
+                placesList.appendChild(listItem);
+            });
+        } catch (err) {
+            alert('Falied to load places');
+        }
     }
 
     // Call loadPlaces if placesList exists

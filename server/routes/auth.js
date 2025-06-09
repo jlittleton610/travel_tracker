@@ -53,7 +53,7 @@ router.post('/login', async (req, res) => {
 
         // console.log('Login successful'); // Testing
         // If credentials are valid, send success and user info (omit password)
-        res.json({ msg: 'Login successful', user: { name: user.name, email: user.email }});
+        res.json({ msg: 'Login successful', user: { _id: user._id, name: user.name, email: user.email }});
     } catch (err) {
         console.error('Server error:', err.message);
         res.status(500).send('Server error');
